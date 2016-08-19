@@ -1,0 +1,11 @@
+ukm_dip_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: UKMDipBundle:Default:index }
+
+ukm_dip_login:
+    path:     /login/
+    defaults: { _controller: UKMDipBundle:Token:login }
+
+ukm_dip_receive:
+    path:     /receive/
+    defaults: { _controller: UKMDipBundle:Token:receive }

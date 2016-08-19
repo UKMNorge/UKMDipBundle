@@ -1,0 +1,4 @@
+services:
+    dipb_user_provider:
+        class: UKMNorge\DipBundle\Security\Provider\DipBUserProvider
+        arguments: ["@doctrine"]
