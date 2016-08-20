@@ -1,0 +1,16 @@
+{
+	
+	"name": "ukmnorge/ukmdipbundle",
+	"description": "Simple authentication for UKM services",
+	"homepage": "http://github.com/UKMNorge/UKMDipBundle",
+	"authors": [
+		{
+			"name": "Asgeir Stavik Hustad",
+			"email": "asgeirsh@ukmmedia.no",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"friendsofsymfony/user-bundle": "~2.0@dev"
+	}
+}
