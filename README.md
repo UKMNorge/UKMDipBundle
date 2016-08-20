@@ -7,12 +7,36 @@ Hva er dette?
 Hvordan komme i gang?
 ---------------------
 
+** Via Composer **
+
+1.
+   Legg til disse linjene i composer.json i prosjektet ditt, og kjør en composer install.
+
+   ```composer
+   "repositories": [
+        {
+            "url": "https://github.com/UKMNorge/UKMDipBundle.git",
+            "type": "git"
+        }
+    ],
+    "require": {
+    	"ukmnorge/ukmdipbundle": "*"
+    }
+
+   ``` 
+   Siden UKMDipBundle ikke er i stabil versjon enda bruker vi et wildcard i `require`-keyen.
+   Hopp til steg 2.
+
+** Manuelt **
+
 1. Klon dette Git-repoet til src/-mappen i Symfony-prosjektet.
+
 2. Sørg for at FOSUserBundle er installert:
 
    `composer require friendsofsymfony/user-bundle "~2.0@dev"`
 
 3. Legg til linjene under i `app/AppKernel.php`
+
    ```
    new UKMNorge\UKMDipBundle\UKMDipBundle(),
    new FOS\UserBundle\FOSUserBundle(),
