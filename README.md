@@ -107,19 +107,6 @@ fos_user:
 7. Endre app/config/parameters.dist.yml
     ukm_dip.token_salt
 
-8. Lag en klasse som implementerer DIPUserInterface
-   Fordi du skal ha muligheten til å benytte din egen klasse, trenger DIP en måte å få tilgang til objektet ditt for å lagre data. Måten dette gjøres på, er ved hjelp av et UserInterface du implementerer. 
-
- ```php
- <?php
- interface DIPUserInterface {
- 	public function get($userId);
- 	public function getByUsername($username);
- 	public function save(User $user);
- }
-
- ``` 
-
 
 Requirements
 ------------
