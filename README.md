@@ -105,7 +105,7 @@ fos_user:
  ```
 
 7. Endre app/config/parameters.dist.yml
-    ukm_dip.token_salt
+    ukm_dip.token_salt: ~ 
 
 
 Requirements
