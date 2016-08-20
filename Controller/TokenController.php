@@ -151,16 +151,19 @@ class TokenController extends Controller
 
     	$em = $this->getDoctrine()->getManager();
     	$em->persist($existingToken);
-    	$em->flush();
+    	#$em->flush(); // No need to flush more than once per request
 
     	// Find or update user
-    	$userRepo = $this->getDoctrine()->getRepository('UKMDipBundle:User');
+        $userClass = $this->getParameter('fos_user.user_class');
+        $userRepo = $this->getDoctrine()->getRepository($userClass);
+    	#$userRepo = $this->getDoctrine()->getRepository('UKMDipBundle:User');
     	$user = $userRepo->findOneBy(array('deltaId' => $data->delta_id));
     	if (!$user) {
 			// Hvis bruker ikke finnes.
             // TODO: Event dispatcher som kan nekte brukere inntil de er godkjente.
             // TODO: Hvordan funker dette med ekstern bruker-klasse????
-    		$user = new User();
+            $user = new $userClass();
+    		#$user = new User();
 
     	}
 
