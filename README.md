@@ -137,6 +137,9 @@ fos_user:
  ```
 
 8. Endre app/config/parameters.dist.yml
+    ukm_dip.location: 'ambassador'
+    ukm_dip.firewall_area: secure_area
+    ukm_dip.entry_point: ukm_amb_join_address
     ukm_dip.token_salt: ~ 
 
 
