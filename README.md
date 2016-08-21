@@ -20,7 +20,7 @@ Hvordan komme i gang?
         }
     ],
     "require": {
-    	"ukmnorge/ukmdipbundle": "*"
+    	"ukmnorge/ukmdipbundle": "dev-master"
     }
 
    ``` 
