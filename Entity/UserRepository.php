@@ -1,6 +1,6 @@
 <?php
 
-namespace UKMNorge\DipBundle\Entity;
+namespace UKMNorge\UKMDipBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use UKMNorge\DipBundle\Security\Provider;

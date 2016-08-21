@@ -1,6 +1,6 @@
 <?php
 
-namespace UKMNorge\DipBundle\Security\Provider;
+namespace UKMNorge\UKMDipBundle\Security\Provider;
 
 use UKMNorge\DipBundle\Entity\User;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
