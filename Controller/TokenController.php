@@ -1,6 +1,6 @@
 <?php
 
-namespace UKMNorge\DipBundle\Controller;
+namespace UKMNorge\UKMDipBundle\Controller;
 
 // For å kunne dele sessions på flere sider
 #ini_set('session.cookie_domain', '.ukm.dev' );
