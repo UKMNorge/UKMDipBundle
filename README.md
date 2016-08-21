@@ -128,7 +128,15 @@ fos_user:
     user_class: AppBundle\Entity\User
  ```
 
-7. Endre app/config/parameters.dist.yml
+7. Endre app/config/routing.yml
+   Lim inn det følgende i routing-konfigurasjonen for å laste inn DIP-ruter:
+
+ ```yaml
+ dip:
+    resource: "@UKMDipBundle/Resources/config/routing.yml"
+ ```
+
+8. Endre app/config/parameters.dist.yml
     ukm_dip.token_salt: ~ 
 
 
