@@ -12,9 +12,9 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 use HttpRequest;
 use Symfony\Component\HttpFoundation\Request;
-use UKMNorge\DipBundle\Entity\Token;
-use UKMNorge\DipBundle\Entity\User;
-use UKMNorge\DipBundle\Security\Provider\DipBUserProvider;
+use UKMNorge\UKMDipBundle\Entity\Token;
+use UKMNorge\UKMDipBundle\Entity\User;
+use UKMNorge\UKMDipBundle\Security\Provider\DipBUserProvider;
 
 use UKMCurl;
 use Exception;

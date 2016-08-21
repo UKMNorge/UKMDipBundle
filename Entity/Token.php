@@ -10,7 +10,7 @@ use Exception;
  * Token
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="UKMNorge\DipBundle\Entity\TokenRepository")
+ * @ORM\Entity(repositoryClass="UKMNorge\UKMDipBundle\Entity\TokenRepository")
  */
 class Token
 {

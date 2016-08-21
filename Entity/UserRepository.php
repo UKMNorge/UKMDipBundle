@@ -3,7 +3,7 @@
 namespace UKMNorge\UKMDipBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use UKMNorge\DipBundle\Security\Provider;
+use UKMNorge\UKMDipBundle\Security\Provider;
 
 /**
  * UserRepository
