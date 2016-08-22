@@ -259,7 +259,7 @@ class TokenController extends Controller
 
     private function validateData($data) {
         $valid = true;
-        if(!is_object($data)
+        if(!is_object($data))
             $valid = false;
         if(!isset($data->delta_id))
             $valid = false;
