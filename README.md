@@ -138,7 +138,7 @@ Hvordan komme i gang?
 8. Endre app/config/parameters.dist.yml
  
  ```yaml
-    ukm_dip.location: 'ambassador'
+    ukm_dip.location: 'location'
     ukm_dip.firewall_area: secure_area
     ukm_dip.entry_point: ukm_amb_join_address
     ukm_dip.token_salt: ~ 

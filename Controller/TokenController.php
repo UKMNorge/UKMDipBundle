@@ -39,6 +39,9 @@ class TokenController extends Controller
             $this->deltaLoginURL = 'http://delta.ukm.no/login';
         }
 
+        $this->get('logger')->debug('UKMDipBundle: dipURL = '.$this->dipURL);
+        $this->get('logger')->debug('UKMDipBundle: deltaLoginURL = '.$this->deltaLoginURL);
+
        /* $this->dipURL = 'http://delta.ukm.no/dip/token';
         $this->deltaLoginURL = 'http://delta.ukm.no/login';*/
 
@@ -57,19 +60,24 @@ class TokenController extends Controller
         $entry_point = $this->container->getParameter('ukm_dip.entry_point');
     	$curl = new UKMCurl();
 
+        $this->get('logger')->info('UKMDipBundle: Authorization flow started.');
 
     	// Har brukeren en session med token?
     	$session = $this->get('session');
     	if ($session->isStarted()) {
     		$token = $session->get('token');
+            $this->get('logger')->debug('UKMDipBundle: User has session.');
             // Hvis token finnes
     		if ($token) {
+                $this->get('logger')->debug('UKMDipBundle: User has token '.$token);
     			// Hvis token finnes, sjekk at det er autentisert i databasen
     			$repo = $this->getDoctrine()->getRepository('UKMDipBundle:Token');
     			$existingToken = $repo->findOneBy(array('token' => $token));
     			if ($existingToken) {
+                    $this->get('logger')->debug('UKMDipBundle: The token is in database.');
     				// Hvis token finnes
-    				if ($existingToken->getAuth() == true) {
+    				if ($existingToken->getAuth() == true) {   
+                        $this->get('logger')->debug('UKMDipBundle: Token is Authorized, logging in user.');
 
     					// Authorized, so trigger log in
     					$userId = $existingToken->getUserId();
@@ -94,6 +102,7 @@ class TokenController extends Controller
     				}
     				else {
     					// Hvis token ikke er autentisert enda
+                        $this->get('logger')->debug('UKMDipBundle: Token not authorized, invalidating it and restarting login flow.');
     					// Fjern lagret token
     					$session->invalidate();
                         // Redirect til Delta
@@ -103,6 +112,7 @@ class TokenController extends Controller
     			// Token finnes, men ikke i databasen.
     			// Ingen token som matcher, ugyldig?
     			// Genererer ny og last inn siden på nytt?
+                $this->get('logger')->error('UKMDipBundle: User has invalid token '.$token);
                 // Denne burde ikke dukke opp!
                 $session->invalidate();
                 return $this->redirect($this->get('router')->generate('ukm_dip_login'));
@@ -111,6 +121,7 @@ class TokenController extends Controller
     	}
         // Brukeren har ikke en session, start en.
     	else {
+            $this->get('logger')->debug('UKMDipBundle: Created session for user.');
     		$session = new Session();
     		$session->start();
     	}
@@ -128,6 +139,7 @@ class TokenController extends Controller
 		$curl->post(array('location' => $location, 'token' => $token->getToken()));
 		$res = $curl->process($this->dipURL);
     	
+        $this->get('logger')->debug('UKMDipBundle: Sent token to Delta.');
 		// Redirect to Delta
         $url = $this->deltaLoginURL.'?token='.$token->getToken().'&rdirurl='.$location;
         return $this->redirect($url);
@@ -137,6 +149,7 @@ class TokenController extends Controller
     public function receiveAction() {
 		// Receives a JSON-object in a POST-request from Delta
 		// This is all the user-data, plus a token
+        $this->get('logger')->info('UKMDipBundle: Token received.');
     	$request = Request::CreateFromGlobals();
     	$data = json_decode($request->request->get('json'));
 
@@ -144,7 +157,10 @@ class TokenController extends Controller
     	$existingToken = $repo->findOneBy(array('token' => $data->token));
     	
         // Set token as authenticated
-    	if (!$existingToken) throw new Exception('Token does not exist', 20005);
+    	if (!$existingToken) {
+            $this->get('logger')->error('UKMDipBundle: Token received from Delta does not exist in local database.')
+            throw new Exception('Token does not exist', 20005);
+        }
     	
         $existingToken->setAuth(true);
     	$existingToken->setUserId($data->delta_id);
@@ -162,11 +178,13 @@ class TokenController extends Controller
 			// Hvis bruker ikke finnes.
             // TODO: Event dispatcher som kan nekte brukere inntil de er godkjente.
             // TODO: Hvordan funker dette med ekstern bruker-klasse????
+            $this->get('logger')->debug('UKMDipBundle: Creating new user of class '.$userClass);
             $user = new $userClass();
     		#$user = new User();
 
     	}
 
+        $this->get('logger')->debug('UKMDipBundle: Saving user-data: '.var_export($data));
         // TODO: Begrens lokal data-lagring, dette håndteres for det meste i brukerimplementasjon!
         // Vi har ikke nødvendigvis mottatt all data, så her bør det sjekkes. Kan også lagre null.
     	$user->setDeltaId($data->delta_id);
@@ -196,10 +214,11 @@ class TokenController extends Controller
 		#$user->setBirthdate($data['birthdate']);
 		// TODO: Set birthdate
 
+        $this->get('logger')->debug('UKMDipBundle: Saving user.');
         // Lagre brukeren lokalt
 		$em->persist($user);
 		$em->flush();
-
+        
     	return $this->render('UKMDipBundle:Default:index.html.twig', array('name' => 'Received'));
     }
 
