@@ -165,10 +165,10 @@ class TokenController extends Controller
 
         	$request = Request::CreateFromGlobals();
         	$data = json_decode($request->request->get('json'));
-            $this->get('logger')->debug('UKMDipBundle: Received data: '.var_export($data));
+            $this->get('logger')->debug('UKMDipBundle: Received data: '. var_export($data, true));
 
             $this->get('logger')->debug('UKMDipBundle: Token '.$data->token. ' received.');
-            $this->get('logger')->debug('UKMDipBundle: Data: '. var_export($data));
+            #$this->get('logger')->debug('UKMDipBundle: Data: '. var_export($data));
 
         	$repo = $this->getDoctrine()->getRepository('UKMDipBundle:Token');
         	$existingToken = $repo->findOneBy(array('token' => $data->token));
@@ -194,7 +194,7 @@ class TokenController extends Controller
             $userClass = $this->getParameter('fos_user.user_class');
             $userRepo = $this->getDoctrine()->getRepository($userClass);
         	#$userRepo = $this->getDoctrine()->getRepository('UKMDipBundle:User');
-        	$user = $userRepo->findOneBy(array('delta_id' => $data->delta_id));
+        	$user = $userRepo->findOneBy(array('deltaId' => $data->delta_id));
         	if (!$user) {
     			// Hvis bruker ikke finnes.
                 // TODO: Event dispatcher som kan nekte brukere inntil de er godkjente.
@@ -205,8 +205,8 @@ class TokenController extends Controller
 
         	}
 
-            $this->get('logger')->debug('UKMDipBundle: Saving user-data: '.var_export($data));
-            // TODO: Begrens lokal data-lagring, dette håndteres for det meste i brukerimplementasjon!
+            $this->get('logger')->debug('UKMDipBundle: Saving user-data: ' . var_export($data, true));
+            // TODO: Begrens lokal data-lagring, dette bør for det meste håndteres i brukerimplementasjon!
             // Vi har ikke nødvendigvis mottatt all data, så her bør det sjekkes. Kan også lagre null.
         	$user->setDeltaId($data->delta_id);
             if($data->email)
@@ -241,7 +241,7 @@ class TokenController extends Controller
     		$em->flush();
         }
         catch (Exception $e) {
-            $errorMsg = 'UKMDipBundle: receiveAction - En feil har oppstått: '.$e->getMessage();
+            $errorMsg = 'UKMDipBundle: receiveAction - En feil har oppstått: '.$e->getMessage(). ' at line '.$e->getLine();
             $this->get('logger')->error($errorMsg);
             throw new Exception($errorMsg);
         }
