@@ -159,7 +159,7 @@ class TokenController extends Controller
 
         $this->get('logger')->debug('UKMDipBundle: Token '.$data->token. ' received.');
         $this->get('logger')->debug('UKMDipBundle: Data: '. var_export($data));
-        
+
     	$repo = $this->getDoctrine()->getRepository('UKMDipBundle:Token');
     	$existingToken = $repo->findOneBy(array('token' => $data->token));
     	
@@ -177,14 +177,14 @@ class TokenController extends Controller
     	$em = $this->getDoctrine()->getManager();
     	$em->persist($existingToken);
 
-        $this->get('logger')->debug('UKMDipBundle: Token stored as authenticated.');
+        $this->get('logger')->debug('UKMDipBundle: Token set as authenticated.');
     	#$em->flush(); // No need to flush more than once per request
 
     	// Find or update user
         $userClass = $this->getParameter('fos_user.user_class');
         $userRepo = $this->getDoctrine()->getRepository($userClass);
     	#$userRepo = $this->getDoctrine()->getRepository('UKMDipBundle:User');
-    	$user = $userRepo->findOneBy(array('deltaId' => $data->delta_id));
+    	$user = $userRepo->findOneBy(array('delta_id' => $data->delta_id));
     	if (!$user) {
 			// Hvis bruker ikke finnes.
             // TODO: Event dispatcher som kan nekte brukere inntil de er godkjente.
