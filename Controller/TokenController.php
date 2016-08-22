@@ -139,7 +139,7 @@ class TokenController extends Controller
 		
 		// Send token to Delta
         $params['api_key'] = $this->getParameter('ukm_dip.api_key');
-        $params['token'] = $token;
+        $params['token'] = $token->getToken();
         $signer = $this->get('UKM.urlsigner');
         $params['sign'] = $signer->getSignedURL('POST', $params);
 		#$curl->post(array('location' => $location, 'token' => $token->getToken()));
