@@ -2,3 +2,6 @@ services:
     dipb_user_provider:
         class: UKMNorge\UKMDipBundle\Security\Provider\DipBUserProvider
         arguments: ["@doctrine", "@service_container"]
+    UKM.urlsigner:
+        class: UKMNorge\UKMDipBundle\Services\URLSignerService
+        arguments: ["@service_container"]

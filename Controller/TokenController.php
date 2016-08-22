@@ -138,7 +138,12 @@ class TokenController extends Controller
     	$em->flush();
 		
 		// Send token to Delta
-		$curl->post(array('location' => $location, 'token' => $token->getToken()));
+        $params['api_key'] = $this->getParameter('ukm_dip.api_key');
+        $params['token'] = $token;
+        $signer = $this->get('UKM.urlsigner');
+        $params['sign'] = $signer->getSignedURL('POST', $params);
+		#$curl->post(array('location' => $location, 'token' => $token->getToken()));
+        $curl->post($params);
 		$res = $curl->process($this->dipURL);
         $this->get('logger')->debug('UKMDipBundle: Sent token to Delta.');
         $this->get('logger')->debug('UKMDipBundle: CURL-result: '.$res);
@@ -159,6 +164,7 @@ class TokenController extends Controller
 
         	$request = Request::CreateFromGlobals();
         	$data = json_decode($request->request->get('json'));
+            $this->get('logger')->debug('UKMDipBundle: Received data: '.var_export($data));
 
             $this->get('logger')->debug('UKMDipBundle: Token '.$data->token. ' received.');
             $this->get('logger')->debug('UKMDipBundle: Data: '. var_export($data));
