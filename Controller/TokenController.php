@@ -158,7 +158,7 @@ class TokenController extends Controller
     	
         // Set token as authenticated
     	if (!$existingToken) {
-            $this->get('logger')->error('UKMDipBundle: Token received from Delta does not exist in local database.')
+            $this->get('logger')->error('UKMDipBundle: Token received from Delta does not exist in local database.');
             throw new Exception('Token does not exist', 20005);
         }
     	
@@ -218,7 +218,7 @@ class TokenController extends Controller
         // Lagre brukeren lokalt
 		$em->persist($user);
 		$em->flush();
-        
+
     	return $this->render('UKMDipBundle:Default:index.html.twig', array('name' => 'Received'));
     }
 
