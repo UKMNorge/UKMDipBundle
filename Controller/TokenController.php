@@ -140,9 +140,10 @@ class TokenController extends Controller
 		// Send token to Delta
 		$curl->post(array('location' => $location, 'token' => $token->getToken()));
 		$res = $curl->process($this->dipURL);
-    	
         $this->get('logger')->debug('UKMDipBundle: Sent token to Delta.');
+
 		// Redirect to Delta
+        $this->get('logger')->debug('UKMDipBundle: Redirecting user to Delta.');
         $url = $this->deltaLoginURL.'?token='.$token->getToken().'&rdirurl='.$location;
         return $this->redirect($url);
     }
@@ -151,10 +152,14 @@ class TokenController extends Controller
     public function receiveAction() {
 		// Receives a JSON-object in a POST-request from Delta
 		// This is all the user-data, plus a token
-        $this->get('logger')->debug('UKMDipBundle: Token received.');
+        $this->get('logger')->debug('UKMDipBundle: receiveAction.');
+
     	$request = Request::CreateFromGlobals();
     	$data = json_decode($request->request->get('json'));
 
+        $this->get('logger')->debug('UKMDipBundle: Token '.$data->token. ' received.');
+        $this->get('logger')->debug('UKMDipBundle: Data: '. var_export($data));
+        
     	$repo = $this->getDoctrine()->getRepository('UKMDipBundle:Token');
     	$existingToken = $repo->findOneBy(array('token' => $data->token));
     	
@@ -164,11 +169,15 @@ class TokenController extends Controller
             throw new Exception('Token does not exist', 20005);
         }
     	
+        $this->get('logger')->debug('UKMDipBundle: Token exists in local database.');
+
         $existingToken->setAuth(true);
     	$existingToken->setUserId($data->delta_id);
 
     	$em = $this->getDoctrine()->getManager();
     	$em->persist($existingToken);
+
+        $this->get('logger')->debug('UKMDipBundle: Token stored as authenticated.');
     	#$em->flush(); // No need to flush more than once per request
 
     	// Find or update user
