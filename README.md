@@ -30,7 +30,6 @@ Hvordan komme i gang?
 ** Manuelt **
 
 1. Klon dette Git-repoet til src/-mappen i Symfony-prosjektet.
-
 2. Sørg for at FOSUserBundle er installert:
 
    `composer require friendsofsymfony/user-bundle "~2.0@dev"`
@@ -81,38 +80,38 @@ Hvordan komme i gang?
    Det er også her du må sette opp brannmuren rett og konfigurere hvilke områder av appen som skal være tilgjengelig i de forskjellige tilgangsnivåene.
 
  ```yaml
-# app/config/security.yml (DipBundle-version)
-security:
-    encoders:
-        UKMDipBundle\Entity\User: 'sha256'
-        FOS\UserBundle\Model\UserInterface: sha512
+    # app/config/security.yml (DipBundle-version)
+    security:
+	    encoders:
+	        UKMDipBundle\Entity\User: 'sha256'
+	        FOS\UserBundle\Model\UserInterface: sha512
 
-    role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: ROLE_ADMIN
+	    role_hierarchy:
+	        ROLE_ADMIN:       ROLE_USER
+	        ROLE_SUPER_ADMIN: ROLE_ADMIN
 
-    providers:
-        dip:
-            #id: dipb_user_provider
-            entity:
-                class: UKMDipBundle:User
-            #d: fos_user.user_provider.username
+	    providers:
+	        dip:
+	            #id: dipb_user_provider
+	            entity:
+	                class: UKMDipBundle:User
+	            #d: fos_user.user_provider.username
 
-    firewalls:
-        secure_area:
-            pattern: ^/
-            provider: dipb_user_provider
-            #login_path: /dip/login
-            logout:
-                path: /logout
-                target: /
-            anonymous: true
+	    firewalls:
+	        secure_area:
+	            pattern: ^/
+	            provider: dipb_user_provider
+	            #login_path: /dip/login
+	            logout:
+	                path: /logout
+	                target: /
+	            anonymous: true
 
-    access_control:
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/dip$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/secure_area, roles: ROLE_USER }
-        - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+	    access_control:
+	        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+	        - { path: ^/dip$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+	        - { path: ^/secure_area, roles: ROLE_USER }
+	        - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
  ```
 
@@ -122,18 +121,18 @@ security:
    user_class er brukerklassen din, inkludert namespace.
 
  ```yaml
-fos_user:
-    db_driver: orm
-    firewall_name: secure_area
-    user_class: AppBundle\Entity\User
+    fos_user:
+        db_driver: orm
+        firewall_name: secure_area
+        user_class: AppBundle\Entity\User
  ```
 
 7. Endre app/config/routing.yml
    Lim inn det følgende i routing-konfigurasjonen for å laste inn DIP-ruter:
 
  ```yaml
- dip:
-    resource: "@UKMDipBundle/Resources/config/routing.yml"
+ 	dip:
+    	resource: "@UKMDipBundle/Resources/config/routing.yml"
  ```
 
 8. Endre app/config/parameters.dist.yml
@@ -149,7 +148,7 @@ fos_user:
    
    ```
    php bin/console doctrine:schema:update --force
-   ```
+   ``
 
 Requirements
 ------------
