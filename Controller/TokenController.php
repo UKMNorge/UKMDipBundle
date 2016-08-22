@@ -141,6 +141,7 @@ class TokenController extends Controller
 		$curl->post(array('location' => $location, 'token' => $token->getToken()));
 		$res = $curl->process($this->dipURL);
         $this->get('logger')->debug('UKMDipBundle: Sent token to Delta.');
+        $this->get('logger')->debug('UKMDipBundle: CURL-result: '.$res);
 
 		// Redirect to Delta
         $this->get('logger')->debug('UKMDipBundle: Redirecting user to Delta.');
@@ -150,86 +151,94 @@ class TokenController extends Controller
 
     // TODO: Fiks en listener som kan populate et eksternt brukerobjekt.
     public function receiveAction() {
-		// Receives a JSON-object in a POST-request from Delta
-		// This is all the user-data, plus a token
-        $this->get('logger')->debug('UKMDipBundle: receiveAction.');
 
-    	$request = Request::CreateFromGlobals();
-    	$data = json_decode($request->request->get('json'));
+        try {
+    		// Receives a JSON-object in a POST-request from Delta
+    		// This is all the user-data, plus a token
+            $this->get('logger')->debug('UKMDipBundle: receiveAction.');
 
-        $this->get('logger')->debug('UKMDipBundle: Token '.$data->token. ' received.');
-        $this->get('logger')->debug('UKMDipBundle: Data: '. var_export($data));
+        	$request = Request::CreateFromGlobals();
+        	$data = json_decode($request->request->get('json'));
 
-    	$repo = $this->getDoctrine()->getRepository('UKMDipBundle:Token');
-    	$existingToken = $repo->findOneBy(array('token' => $data->token));
-    	
-        // Set token as authenticated
-    	if (!$existingToken) {
-            $this->get('logger')->error('UKMDipBundle: Token received from Delta does not exist in local database.');
-            throw new Exception('Token does not exist', 20005);
+            $this->get('logger')->debug('UKMDipBundle: Token '.$data->token. ' received.');
+            $this->get('logger')->debug('UKMDipBundle: Data: '. var_export($data));
+
+        	$repo = $this->getDoctrine()->getRepository('UKMDipBundle:Token');
+        	$existingToken = $repo->findOneBy(array('token' => $data->token));
+        	
+            // Set token as authenticated
+        	if (!$existingToken) {
+                $this->get('logger')->error('UKMDipBundle: Token received from Delta does not exist in local database.');
+                throw new Exception('Token does not exist', 20005);
+            }
+        	
+            $this->get('logger')->debug('UKMDipBundle: Token exists in local database.');
+
+            $existingToken->setAuth(true);
+        	$existingToken->setUserId($data->delta_id);
+
+        	$em = $this->getDoctrine()->getManager();
+        	$em->persist($existingToken);
+
+            $this->get('logger')->debug('UKMDipBundle: Token set as authenticated.');
+        	#$em->flush(); // No need to flush more than once per request
+
+        	// Find or update user
+            $userClass = $this->getParameter('fos_user.user_class');
+            $userRepo = $this->getDoctrine()->getRepository($userClass);
+        	#$userRepo = $this->getDoctrine()->getRepository('UKMDipBundle:User');
+        	$user = $userRepo->findOneBy(array('delta_id' => $data->delta_id));
+        	if (!$user) {
+    			// Hvis bruker ikke finnes.
+                // TODO: Event dispatcher som kan nekte brukere inntil de er godkjente.
+                // TODO: Hvordan funker dette med ekstern bruker-klasse????
+                $this->get('logger')->debug('UKMDipBundle: Creating new user of class '.$userClass);
+                $user = new $userClass();
+        		#$user = new User();
+
+        	}
+
+            $this->get('logger')->debug('UKMDipBundle: Saving user-data: '.var_export($data));
+            // TODO: Begrens lokal data-lagring, dette håndteres for det meste i brukerimplementasjon!
+            // Vi har ikke nødvendigvis mottatt all data, så her bør det sjekkes. Kan også lagre null.
+        	$user->setDeltaId($data->delta_id);
+            if($data->email)
+                $user->setEmail($data->email);
+            if($data->phone)
+                $user->setPhone($data->phone);
+            if($data->address)
+                $user->setAddress($data->address);
+            if($data->post_number)
+                $user->setPostNumber($data->post_number);
+    		if($data->post_place)
+                $user->setPostPlace($data->post_place);
+    		if($data->first_name)  
+                $user->setFirstName($data->first_name);
+    		if($data->last_name)
+                $user->setLastName($data->last_name);
+            if($data->facebook_id)
+    		  $user->setFacebookId($data->facebook_id);
+    		if($data->facebook_id_unencrypted)
+                $user->setFacebookIdUnencrypted($data->facebook_id_unencrypted);
+    		if($data->facebook_access_token)
+                $user->setFacebookAccessToken($data->facebook_access_token);
+
+    		$time = new DateTime();
+    		$user->setBirthdate($time->getTimestamp());
+    		#$user->setBirthdate($data['birthdate']);
+    		// TODO: Set birthdate
+
+            $this->get('logger')->debug('UKMDipBundle: Saving user.');
+            // Lagre brukeren lokalt
+    		$em->persist($user);
+    		$em->flush();
         }
-    	
-        $this->get('logger')->debug('UKMDipBundle: Token exists in local database.');
-
-        $existingToken->setAuth(true);
-    	$existingToken->setUserId($data->delta_id);
-
-    	$em = $this->getDoctrine()->getManager();
-    	$em->persist($existingToken);
-
-        $this->get('logger')->debug('UKMDipBundle: Token set as authenticated.');
-    	#$em->flush(); // No need to flush more than once per request
-
-    	// Find or update user
-        $userClass = $this->getParameter('fos_user.user_class');
-        $userRepo = $this->getDoctrine()->getRepository($userClass);
-    	#$userRepo = $this->getDoctrine()->getRepository('UKMDipBundle:User');
-    	$user = $userRepo->findOneBy(array('delta_id' => $data->delta_id));
-    	if (!$user) {
-			// Hvis bruker ikke finnes.
-            // TODO: Event dispatcher som kan nekte brukere inntil de er godkjente.
-            // TODO: Hvordan funker dette med ekstern bruker-klasse????
-            $this->get('logger')->debug('UKMDipBundle: Creating new user of class '.$userClass);
-            $user = new $userClass();
-    		#$user = new User();
-
-    	}
-
-        $this->get('logger')->debug('UKMDipBundle: Saving user-data: '.var_export($data));
-        // TODO: Begrens lokal data-lagring, dette håndteres for det meste i brukerimplementasjon!
-        // Vi har ikke nødvendigvis mottatt all data, så her bør det sjekkes. Kan også lagre null.
-    	$user->setDeltaId($data->delta_id);
-        if($data->email)
-            $user->setEmail($data->email);
-        if($data->phone)
-            $user->setPhone($data->phone);
-        if($data->address)
-            $user->setAddress($data->address);
-        if($data->post_number)
-            $user->setPostNumber($data->post_number);
-		if($data->post_place)
-            $user->setPostPlace($data->post_place);
-		if($data->first_name)  
-            $user->setFirstName($data->first_name);
-		if($data->last_name)
-            $user->setLastName($data->last_name);
-        if($data->facebook_id)
-		  $user->setFacebookId($data->facebook_id);
-		if($data->facebook_id_unencrypted)
-            $user->setFacebookIdUnencrypted($data->facebook_id_unencrypted);
-		if($data->facebook_access_token)
-            $user->setFacebookAccessToken($data->facebook_access_token);
-
-		$time = new DateTime();
-		$user->setBirthdate($time->getTimestamp());
-		#$user->setBirthdate($data['birthdate']);
-		// TODO: Set birthdate
-
-        $this->get('logger')->debug('UKMDipBundle: Saving user.');
-        // Lagre brukeren lokalt
-		$em->persist($user);
-		$em->flush();
-
+        catch (Exception $e) {
+            $errorMsg = 'UKMDipBundle: receiveAction - En feil har oppstått: '.$e->getMessage();
+            $this->get('logger')->error($errorMsg);
+            throw new Exception($errorMsg);
+        }
+        return new Response('Success!');
     	return $this->render('UKMDipBundle:Default:index.html.twig', array('name' => 'Received'));
     }
 

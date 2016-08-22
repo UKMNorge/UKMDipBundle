@@ -150,6 +150,10 @@ Hvordan komme i gang?
    php bin/console doctrine:schema:update --force
    ``
 
+TODO
+----
+- Fiks config slik at fos_user.user_class kan brukes i stedet for å måtte sette verdien i parameters.
+
 Requirements
 ------------
 
