@@ -118,16 +118,18 @@ class TokenController extends Controller
                 return $this->redirect($this->get('router')->generate('ukm_dip_login'));
     		}
             // Brukeren har en session, men ikke token.
+            $this->get('logger')->debug('UKMDipBundle: User has no token.');
     	}
         // Brukeren har ikke en session, start en.
     	else {
-            $this->get('logger')->debug('UKMDipBundle: Created session for user.');
+            $this->get('logger')->debug('UKMDipBundle: Created new session for user.');
     		$session = new Session();
     		$session->start();
     	}
 
 		// Generate token entity
 		$token = new Token($this->container->getParameter('ukm_dip.token_salt'));
+        $this->get('logger')->debug('UKMDipBundle: Created new token for user.');
 		// Update session with token
 		$session->set('token', $token->getToken());
 		// Update database with the new token
@@ -149,7 +151,7 @@ class TokenController extends Controller
     public function receiveAction() {
 		// Receives a JSON-object in a POST-request from Delta
 		// This is all the user-data, plus a token
-        $this->get('logger')->info('UKMDipBundle: Token received.');
+        $this->get('logger')->debug('UKMDipBundle: Token received.');
     	$request = Request::CreateFromGlobals();
     	$data = json_decode($request->request->get('json'));
 
