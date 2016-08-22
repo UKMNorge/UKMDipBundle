@@ -168,6 +168,7 @@ class TokenController extends Controller
             $this->get('logger')->debug('UKMDipBundle: Received data: '. var_export($data, true));
 
             $this->get('logger')->debug('UKMDipBundle: Token '.$data->token. ' received.');
+            $this->get('logger')->debug('UKMDipBundle: User has delta_id '.$data->delta_id . '.');
             #$this->get('logger')->debug('UKMDipBundle: Data: '. var_export($data));
 
         	$repo = $this->getDoctrine()->getRepository('UKMDipBundle:Token');
@@ -188,7 +189,13 @@ class TokenController extends Controller
         	$em->persist($existingToken);
 
             $this->get('logger')->debug('UKMDipBundle: Token set as authenticated.');
-        	#$em->flush(); // No need to flush more than once per request
+        	#$em->flush(); // No need to flush more than once per request?
+
+            if(!$this->validateData($data)) {
+                $msg = 'UKMDipBundle: Dataene som ble tatt i mot feilet validering.';
+                $this->get('logger')->error($msg);
+                die($msg);
+            }
 
         	// Find or update user
             $userClass = $this->getParameter('fos_user.user_class');
@@ -243,10 +250,21 @@ class TokenController extends Controller
         catch (Exception $e) {
             $errorMsg = 'UKMDipBundle: receiveAction - En feil har oppstått: '.$e->getMessage(). ' at line '.$e->getLine();
             $this->get('logger')->error($errorMsg);
+            $this->get('logger')->error('Stacktrace: '.$e->getTraceAsString());
             throw new Exception($errorMsg);
         }
         return new Response('Success!');
     	return $this->render('UKMDipBundle:Default:index.html.twig', array('name' => 'Received'));
+    }
+
+    private function validateData($data) {
+        $valid = true;
+        if(!is_object($data)
+            $valid = false;
+        if(!isset($data->delta_id))
+            $valid = false;
+
+        return $valid;
     }
 
 }
