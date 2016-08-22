@@ -23,8 +23,7 @@ class URLSignerService {
 	}
 
 	public function getApiKey() {
-		$this->container->getParameter('ukm_dip.api_key');
-		return $key->getApiKey();
+		return $this->container->getParameter('ukm_dip.api_key');
 	}
 
 	private function getApiSecret() {
