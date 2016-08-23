@@ -93,7 +93,8 @@ class TokenController extends Controller
     					$user = $userProvider->loadUserByUsername($userId);
                         $this->get('logger')->debug('UKMDipBundle: Loaded user: '.$user->getUsername());
 
-				        $token = new UsernamePasswordToken($user, $user->getPassword(), $firewall_name, $user->getRoles());
+				        #$token = new UsernamePasswordToken($user, $user->getPassword(), $firewall_name, $user->getRoles());
+                        $token = new UsernamePasswordToken($user, null, $firewall_name, $user->getRoles());
 
                         $this->get('logger')->debug('UKMDipBundle: UsernamePasswordToken: '. $token);
 				        // For older versions of Symfony, use security.context here
@@ -104,7 +105,6 @@ class TokenController extends Controller
                         else {
                             $this->get("security.context")->setToken($token);
                         }
-
 
                         // Apparently, we also need to store the token in the session
                         $session->set('_security_'.$firewall_name, serialize($token));
