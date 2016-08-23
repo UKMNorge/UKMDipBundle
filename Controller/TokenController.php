@@ -199,9 +199,10 @@ class TokenController extends Controller
 
         	// Find or update user
             $userClass = $this->getParameter('fos_user.user_class');
-            $userRepo = $this->getDoctrine()->getRepository($userClass);
-        	#$userRepo = $this->getDoctrine()->getRepository('UKMDipBundle:User');
-        	$user = $userRepo->findOneBy(array('deltaId' => $data->delta_id));
+            #$userRepo = $this->getDoctrine()->getRepository($userClass);
+        	$userRepo = $this->getDoctrine()->getRepository('UKMDipBundle:User');
+            $user = null;
+        	#$user = $userRepo->findOneBy(array('deltaId' => $data->delta_id));
         	if (!$user) {
     			// Hvis bruker ikke finnes.
                 // TODO: Event dispatcher som kan nekte brukere inntil de er godkjente.
