@@ -8,10 +8,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * User
  *
- * @ORM\Table()
- * @ORM\Entity(repositoryClass="UKMNorge\UKMDipBundle\Entity\UserRepository")
+ * @ORM\MappedSuperclass
  */
-class User implements UserInterface
+class UserClass implements UserInterface
 {   
     // We don't use the password-functionality, but it needs to be implemented
     // so that Symfony will treat us like a proper user.
