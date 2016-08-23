@@ -105,10 +105,14 @@ class TokenController extends Controller
                             $this->get("security.context")->setToken($token);
                         }
 
-                        $this->get('event_dispatcher')->dispatch( 
+
+                        // Apparently, we also need to store the token in the session
+                        $session->set('_security_'.$firewall_name, serialize($token));
+
+                      /*  $this->get('event_dispatcher')->dispatch( 
                             AuthenticationEvents::AUTHENTICATION_SUCCESS, 
                             new AuthenticationEvent($token)
-                        );
+                        );*/
 
 				        // Fire the login event
 				        // Logging the user in above the way we do it doesn't do this automatically
