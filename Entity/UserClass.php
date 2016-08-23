@@ -26,21 +26,21 @@ class UserClass extends BaseUser implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="delta_id", type="integer", unique=true)
      */
-    private $deltaId;
+    protected $deltaId;
 
     /**
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255)
      */
-    private $email;
+    protected $email;
 
     /**
      *
