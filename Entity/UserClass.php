@@ -134,7 +134,7 @@ class UserClass extends BaseUser implements UserInterface
         return $this->getFirstName() . ' ' . $this->getLastName();
     }
 
-    public function  setData($data) {
+    public function setData($data) {
         // Implement all setters from DIP
     }
 

@@ -91,14 +91,20 @@ class TokenController extends Controller
 				        $token = new UsernamePasswordToken($user, $user->getPassword(), $firewall_name, $user->getRoles());
 
 				        // For older versions of Symfony, use security.context here
-                        // Newer uses security.token_storage
-				        $this->get("security.token_storage")->setToken($token);
+                        if(\Symfony\Component\HttpKernel\Kernel::VERSION > 2.5) {
+                            // Newer uses security.token_storage
+				            $this->get("security.token_storage")->setToken($token);
+                        }
+                        else {
+                            $this->get("security.context")->setToken($token);
+                        }
 
 				        // Fire the login event
 				        // Logging the user in above the way we do it doesn't do this automatically
 					    #$request = $this->get("request");
                         $request = Request::CreateFromGlobals();
 				        $event = new InteractiveLoginEvent($request, $token);
+                        $this->get('logger')->info('UKMDipBundle: Dispatching interactive_login event.');
 				        $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
 
 				        // Redirect til en side bak firewall i stedet
