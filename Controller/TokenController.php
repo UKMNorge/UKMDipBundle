@@ -87,9 +87,13 @@ class TokenController extends Controller
                         
     					// Load user data?
     					$userProvider = $this->get('dipb_user_provider');
+                        $this->get('logger')->debug('UKMDipBundle: UserProvider: '.get_class($userProvider));
     					$user = $userProvider->loadUserByUsername($userId);
+                        $this->get('logger')->debug('UKMDipBundle: Loaded user: '.$user->getUsername());
+
 				        $token = new UsernamePasswordToken($user, $user->getPassword(), $firewall_name, $user->getRoles());
 
+                        #$this->get('logger')->debug('UKMDipBundle: UsernamePasswordToken: '. $token);
 				        // For older versions of Symfony, use security.context here
                         if(\Symfony\Component\HttpKernel\Kernel::VERSION > 2.5) {
                             // Newer uses security.token_storage
