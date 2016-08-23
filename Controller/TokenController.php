@@ -115,9 +115,7 @@ class TokenController extends Controller
                         //     new AuthenticationEvent($token)
                         // );
 
-				        // Fire the login event
-				        // Logging the user in above the way we do it doesn't do this automatically
-					    #$request = $this->get("request");
+				        
                         $request = Request::CreateFromGlobals();
 				        $event = new InteractiveLoginEvent($request, $token);
                         $this->get('logger')->info('UKMDipBundle: Dispatching interactive_login event.');

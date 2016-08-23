@@ -13,6 +13,7 @@ class DipBUserProvider implements UserProviderInterface
 	public function __construct($doctrine, $container) {
 		$this->doctrine = $doctrine;
 		$this->container = $container;
+		$this->logger = $container->get('logger');
 	}
 	
 	public function loadUserByUsername($username) {
@@ -23,7 +24,9 @@ class DipBUserProvider implements UserProviderInterface
 		#$userRepo = $this->doctrine->getRepository('UKMDipBundle:User');
 		$userRepo = $this->doctrine->getRepository($userClass);
 		$user = $userRepo->findOneBy(array('deltaId' => $username));
+		
 		if (!$user) {
+			$this->logger->info('UKMDipBundle: Ingen bruker funnet med deltaId '.$username);
 			throw new UsernameNotFoundException(
 				sprintf('User with DeltaID "%s" does not exist.', $username)
         	);
