@@ -216,32 +216,18 @@ class TokenController extends Controller
 
         	}
 
-            $this->get('logger')->debug('UKMDipBundle: Saving user-data: ' . var_export($data, true));
+            $this->get('logger')->debug('UKMDipBundle: UserClass: '.get_class($user).'. Saving user-data: ' . var_export($data, true));
             // TODO: Begrens lokal data-lagring, dette bør for det meste håndteres i brukerimplementasjon!
             // Vi har ikke nødvendigvis mottatt all data, så her bør det sjekkes. Kan også lagre null.
         	$user->setDeltaId($data->delta_id);
             if($data->email)
                 $user->setEmail($data->email);
-            if($data->phone)
-                $user->setPhone($data->phone);
-            if($data->address)
-                $user->setAddress($data->address);
-            if($data->post_number)
-                $user->setPostNumber($data->post_number);
-    		if($data->post_place)
-                $user->setPostPlace($data->post_place);
     		if($data->first_name)  
                 $user->setFirstName($data->first_name);
     		if($data->last_name)
                 $user->setLastName($data->last_name);
-            if($data->facebook_id)
-    		  $user->setFacebookId($data->facebook_id);
-    		if($data->facebook_id_unencrypted)
-                $user->setFacebookIdUnencrypted($data->facebook_id_unencrypted);
-    		if($data->facebook_access_token)
-                $user->setFacebookAccessToken($data->facebook_access_token);
 
-            // La brukeren lagre data
+            // La brukerobjektet lagre data
             $user->setData($data);
 
     		$time = new DateTime();
@@ -258,6 +244,7 @@ class TokenController extends Controller
             $errorMsg = 'UKMDipBundle: receiveAction - En feil har oppstått: '.$e->getMessage(). ' at line '.$e->getLine();
             $this->get('logger')->error($errorMsg);
             $this->get('logger')->error('Stacktrace: '.$e->getTraceAsString());
+            die('Error');
             throw new Exception($errorMsg);
         }
         return new Response('Success!');
