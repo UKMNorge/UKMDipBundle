@@ -247,6 +247,7 @@ class TokenController extends Controller
             // Lagre brukeren lokalt
     		$em->persist($user);
     		$em->flush();
+            return new Response('Success (ReceiveAction)!');
         }
         catch (Exception $e) {
             $errorMsg = 'UKMDipBundle: receiveAction - En feil har oppstått: '.$e->getMessage(). ' at line '.$e->getLine();
@@ -255,8 +256,8 @@ class TokenController extends Controller
             die('Error');
             throw new Exception($errorMsg);
         }
-        return new Response('Success!');
-    	return $this->render('UKMDipBundle:Default:index.html.twig', array('name' => 'Received'));
+        
+    	#return $this->render('UKMDipBundle:Default:index.html.twig', array('name' => 'Received'));
     }
 
     private function validateData($data) {
