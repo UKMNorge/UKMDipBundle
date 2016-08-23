@@ -162,7 +162,7 @@ class UserClass extends BaseUser implements UserInterface
     }
 
 
-    public function serialize()
+    /*public function serialize()
     {
         return serialize(array(
             $this->id,
@@ -182,5 +182,5 @@ class UserClass extends BaseUser implements UserInterface
             // see section on salt below
             // $this->salt
         ) = unserialize($serialized);
-    }
+    }*/
 }
