@@ -67,6 +67,8 @@ class UserClass extends BaseUser implements UserInterface
     public function setDeltaId($deltaId)
     {
         $this->deltaId = $deltaId;
+        // FOSUserBundle-compatibility
+        $this->setUsername($deltaId);
 
         return $this;
     }
