@@ -108,6 +108,7 @@ class TokenController extends Controller
 
                         // Apparently, we also need to store the token in the session
                         $session->set('_security_'.$firewall_name, serialize($token));
+                        $session->save();
 
                         // $this->get('event_dispatcher')->dispatch( 
                         //     AuthenticationEvents::AUTHENTICATION_SUCCESS, 
