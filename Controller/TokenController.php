@@ -17,6 +17,7 @@ use UKMNorge\UKMDipBundle\Entity\Token;
 use UKMNorge\UKMDipBundle\Entity\User;
 use UKMNorge\UKMDipBundle\Security\Provider\DipBUserProvider;
 
+use Symfony\Component\Security\Core\AuthenticationEvents;
 use Symfony\Component\Security\Http\Event\AuthenticationEvent;
 
 use UKMCurl;
