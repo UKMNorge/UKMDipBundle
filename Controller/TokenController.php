@@ -241,6 +241,9 @@ class TokenController extends Controller
     		if($data->facebook_access_token)
                 $user->setFacebookAccessToken($data->facebook_access_token);
 
+            // La brukeren lagre data
+            $user->setData($data);
+
     		$time = new DateTime();
     		$user->setBirthdate($time->getTimestamp());
     		#$user->setBirthdate($data['birthdate']);

@@ -9,8 +9,7 @@ Hvordan komme i gang?
 
 ** Via Composer **
 
-1.
-   Legg til disse linjene i composer.json i prosjektet ditt, og kjør en composer install.
+1. Legg til disse linjene i composer.json i prosjektet ditt, og kjør en composer install.
 
    ```composer
    "repositories": [
@@ -25,7 +24,6 @@ Hvordan komme i gang?
 
    ``` 
    Siden UKMDipBundle ikke er i stabil versjon enda bruker vi et wildcard i `require`-keyen.
-
 2. Sørg for at FOSUserBundle er installert:
    Dette skal i utgangspunktet skje automatisk når du requirer UKMDipBundle, men det skaper ingen problemer å gjøre det manuelt her.
 
@@ -42,6 +40,7 @@ Hvordan komme i gang?
    Dip extender FOSUserBundle's brukerklasse for å legge til noen ekstra felt, og det er denne klassen du selv må extende for å kunne bruke DIP.
 
    OBS! Du kan ikke duplisere noen av feltene som finnes i BaseUser - se [https://github.com/UKMNorge/UKMDipBundle/blob/master/Entity/UserClass.php]
+   OBS! Funksjonen setData må implementeres dersom du vil lagre noe mer enn standard-feltene til BaseUser.
 
  ```php
 	<?php
@@ -64,6 +63,10 @@ Hvordan komme i gang?
 	        parent::__construct();
 	        // your own logic
 	    }
+
+	    public function setData($data) {
+	    	// Called from DIP on every login, collect what data you want here.
+		}
 	}
 
  ```
