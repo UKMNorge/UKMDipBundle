@@ -138,9 +138,10 @@ class UserClass extends BaseUser implements UserInterface
 
 
     ### SECURITY-related methods!
-    public function getRoles() {
+    // Implemented by FOSUserBundle?
+    /*public function getRoles() {
         return array('ROLE_USER');
-    }
+    }*/
 
     public function getPassword() {
         // We don't use the password-functionality, so this doesn't have to be safe.
