@@ -17,6 +17,7 @@ use UKMNorge\UKMDipBundle\Entity\Token;
 use UKMNorge\UKMDipBundle\Entity\User;
 use UKMNorge\UKMDipBundle\Security\Provider\DipBUserProvider;
 
+use Symfony\Component\Security\Http\Event\AuthenticationEvent;
 
 use UKMCurl;
 use Exception;
@@ -102,6 +103,11 @@ class TokenController extends Controller
                         else {
                             $this->get("security.context")->setToken($token);
                         }
+
+                        $this->get('event_dispatcher')->dispatch( 
+                            AuthenticationEvents::AUTHENTICATION_SUCCESS, 
+                            new AuthenticationEvent($token)
+                        );
 
 				        // Fire the login event
 				        // Logging the user in above the way we do it doesn't do this automatically
