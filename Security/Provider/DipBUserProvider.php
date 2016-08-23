@@ -34,7 +34,7 @@ class DipBUserProvider implements UserProviderInterface
 
 	public function refreshUser(UserInterface $user) {
 		#if (!$user instanceof User) {
-		$userClass = $this->container->getParameter('fos_user.user_class');
+		$userClass = $this->container->getParameter('ukm_dip.user_class');
 		if (!$user instanceof $userClass) {
             throw new UnsupportedUserException(
                 sprintf('Instances of "%s" are not supported.', get_class($user))
@@ -45,7 +45,7 @@ class DipBUserProvider implements UserProviderInterface
 
 	public function supportsClass($class) {
 		//return $class === 'UKMNorge\DipBundle\Entity\User';
-		$userClass = $this->container->getParameter('fos_user.user_class');
+		$userClass = $this->container->getParameter('ukm_dip.user_class');
 		return $class === $userClass;
 	}
 }
