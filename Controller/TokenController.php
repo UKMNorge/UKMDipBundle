@@ -222,18 +222,23 @@ class TokenController extends Controller
             // TODO: Begrens lokal data-lagring, dette bør for det meste håndteres i brukerimplementasjon!
             // Vi har ikke nødvendigvis mottatt all data, så her bør det sjekkes. Kan også lagre null.
         	$user->setDeltaId($data->delta_id);
+            $this->get('logger')->debug('UKMDipBundle: Satt delta-id');
             if($data->email)
                 $user->setEmail($data->email);
+            $this->get('logger')->debug('UKMDipBundle: Satt email');
     		if($data->first_name)  
                 $user->setFirstName($data->first_name);
+            $this->get('logger')->debug('UKMDipBundle: Satt firstName');
     		if($data->last_name)
                 $user->setLastName($data->last_name);
+            $this->get('logger')->debug('UKMDipBundle: Satt lastName');
 
             // La brukerobjektet lagre data
             $user->setData($data);
+            $this->get('logger')->debug('UKMDipBundle: Kjørte setData på User');
 
-    		$time = new DateTime();
-    		$user->setBirthdate($time->getTimestamp());
+    		#$time = new DateTime();
+    		#$user->setBirthdate($time->getTimestamp());
     		#$user->setBirthdate($data['birthdate']);
     		// TODO: Set birthdate
 
