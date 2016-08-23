@@ -36,13 +36,6 @@ class UserClass extends BaseUser implements UserInterface
     protected $deltaId;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=255)
-     */
-    protected $email;
-
-    /**
      *
      * @ORM\Column(name="first_name", type="string", length=255, nullable=true)
      *
@@ -86,29 +79,6 @@ class UserClass extends BaseUser implements UserInterface
     public function getDeltaId()
     {
         return $this->deltaId;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string 
-     */
-    public function getEmail()
-    {
-        return $this->email;
     }
 
     /**
