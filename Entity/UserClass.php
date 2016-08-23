@@ -40,13 +40,13 @@ class UserClass extends BaseUser implements UserInterface
      * @ORM\Column(name="first_name", type="string", length=255, nullable=true)
      *
      */
-    protected $first_name;
+    protected $firstName;
     /**
      *
      * @ORM\Column(name="last_name", type="string", length=255, nullable=true)
      *
      */
-    protected $last_name;
+    protected $lastName;
 
     /**
      * Get id
