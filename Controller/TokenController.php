@@ -7,6 +7,7 @@ namespace UKMNorge\UKMDipBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use UKMNorge\UKMDipBundle\Entity\Token;
 use UKMNorge\UKMDipBundle\Entity\User;
 use UKMNorge\UKMDipBundle\Security\Provider\DipBUserProvider;
+
 
 use UKMCurl;
 use Exception;
