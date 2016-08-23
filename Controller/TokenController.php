@@ -211,7 +211,9 @@ class TokenController extends Controller
                 // TODO: Event dispatcher som kan nekte brukere inntil de er godkjente.
                 // TODO: Hvordan funker dette med ekstern bruker-klasse????
                 $this->get('logger')->debug('UKMDipBundle: Creating new user of class '.$userClass);
-                $user = new $userClass();
+                #$user = new $userClass();
+                $userManager = $this->get('fos_user.user_manager');
+                $user = $userManager->createUser();
         		#$user = new User();
 
         	}

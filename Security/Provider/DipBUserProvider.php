@@ -14,6 +14,7 @@ class DipBUserProvider implements UserProviderInterface
 		$this->doctrine = $doctrine;
 		$this->container = $container;
 	}
+	
 	public function loadUserByUsername($username) {
 		// $username = delta_id
 		#$userClass = $this->container->getParameter('fos_user.user_class');
