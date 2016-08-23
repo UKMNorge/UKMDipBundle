@@ -5,6 +5,7 @@ namespace UKMNorge\UKMDipBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+// TODO: Gå over til SINGLE_TABLE_INHERITANCE - da kan man extende som forventet.
 /**
  * User
  *

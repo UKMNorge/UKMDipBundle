@@ -25,12 +25,9 @@ Hvordan komme i gang?
 
    ``` 
    Siden UKMDipBundle ikke er i stabil versjon enda bruker vi et wildcard i `require`-keyen.
-   Hopp til steg 2.
 
-** Manuelt **
-
-1. Klon dette Git-repoet til src/-mappen i Symfony-prosjektet.
 2. Sørg for at FOSUserBundle er installert:
+   Dette skal i utgangspunktet skje automatisk når du requirer UKMDipBundle, men det skaper ingen problemer å gjøre det manuelt her.
 
    `composer require friendsofsymfony/user-bundle "~2.0@dev"`
 
@@ -44,13 +41,15 @@ Hvordan komme i gang?
 4. Opprett en bruker-klasse som extender DIPs brukerklasse. 
    Dip extender FOSUserBundle's brukerklasse for å legge til noen ekstra felt, og det er denne klassen du selv må extende for å kunne bruke DIP.
 
+   OBS! Du kan ikke duplisere noen av feltene som finnes i BaseUser - se [https://github.com/UKMNorge/UKMDipBundle/blob/master/Entity/UserClass.php]
+
  ```php
 	<?php
 	// src/AppBundle/Entity/User.php
 
 	namespace AppBundle\Entity;
 
-	use UKMNorge\UKMDipBundle\Entity\User as BaseUser;
+	use UKMNorge\UKMDipBundle\Entity\UserClass as BaseUser;
 	use Doctrine\ORM\Mapping as ORM;
 
 	/**
@@ -59,12 +58,6 @@ Hvordan komme i gang?
 	 */
 	class User extends BaseUser
 	{
-		/**
-	     * @ORM\Id
-	     * @ORM\Column(type="integer")
-	     * @ORM\GeneratedValue(strategy="AUTO")
-	     */
-	    protected $id;
 
 	    public function __construct()
 	    {
@@ -128,7 +121,7 @@ Hvordan komme i gang?
  ```
 
 7. Endre app/config/routing.yml
-   Lim inn det følgende i routing-konfigurasjonen for å laste inn DIP-ruter:
+   Lim inn linjen under i routing-konfigurasjonen din for å laste inn DIP-ruter:
 
  ```yaml
  	dip:
@@ -136,11 +129,21 @@ Hvordan komme i gang?
  ```
 
 8. Endre app/config/parameters.dist.yml
- 
+   `ukm_dip.firewall_area` er navnet på brannmuren du har satt opp i security.yml.
+   `ukm_dip.location` er deprecated.
+   `ukm_dip.api_key` er api-nøkkelen du har fått fra UKM support.
+   `ukm_dip.api_secret` er api-secreten du har fått fra UKM support.
+   `ukm_dip.entry_point` er navnet på en route til siden brukerne skal sendes til når de er innlogget.
+   `ukm_dip.token_salt` er en tekst-streng som brukes til å salte tokens.
+   `ukm_dip.user_class` er brukerentiteten din, med fullt namespace (i.e. AppBundle\Entity\User`).
+
  ```yaml
     ukm_dip.location: 'location'
     ukm_dip.firewall_area: secure_area
-    ukm_dip.entry_point: ukm_amb_join_address
+    ukm_dip.entry_point: ~
+    ukm_dip.api_key: ~
+    ukm_dip.api_secret: ~
+    ukm_dip.user_class: AppBundle\Entity\User
     ukm_dip.token_salt: ~ 
  ```
 
@@ -150,9 +153,12 @@ Hvordan komme i gang?
    php bin/console doctrine:schema:update --force
    ``
 
+10. Kjør en `composer install`
+
 TODO
 ----
 - Fiks config slik at fos_user.user_class kan brukes i stedet for å måtte sette verdien i parameters.
+- Oppdater rekkefølgen på punktene - composer install og parameters.dist.yml må nok lenger fram i lista.
 
 Requirements
 ------------
