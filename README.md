@@ -79,8 +79,9 @@ Hvordan komme i gang?
     # app/config/security.yml (DipBundle-version)
     security:
 	    encoders:
-	        UKMDipBundle\Entity\User: 'sha256'
-	        FOS\UserBundle\Model\UserInterface: sha512
+	    	AppBundle\Entity\User: 'sha256'
+	        #UKMDipBundle\Entity\User: 'sha256'
+	        #FOS\UserBundle\Model\UserInterface: sha512
 
 	    role_hierarchy:
 	        ROLE_ADMIN:       ROLE_USER
@@ -88,9 +89,9 @@ Hvordan komme i gang?
 
 	    providers:
 	        dip:
-	            #id: dipb_user_provider
-	            entity:
-	                class: UKMDipBundle:User
+	            id: dipb_user_provider
+	            #entity:
+	            #    class: UKMDipBundle:User
 	            #d: fos_user.user_provider.username
 
 	    firewalls:
@@ -133,7 +134,7 @@ Hvordan komme i gang?
 
 8. Endre app/config/parameters.dist.yml
    `ukm_dip.firewall_area` er navnet på brannmuren du har satt opp i security.yml.
-   `ukm_dip.location` er deprecated.
+   `ukm_dip.location` er deprecated og ikke nødvendig.
    `ukm_dip.api_key` er api-nøkkelen du har fått fra UKM support.
    `ukm_dip.api_secret` er api-secreten du har fått fra UKM support.
    `ukm_dip.entry_point` er navnet på en route til siden brukerne skal sendes til når de er innlogget.
