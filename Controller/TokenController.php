@@ -93,7 +93,7 @@ class TokenController extends Controller
 
 				        $token = new UsernamePasswordToken($user, $user->getPassword(), $firewall_name, $user->getRoles());
 
-                        #$this->get('logger')->debug('UKMDipBundle: UsernamePasswordToken: '. $token);
+                        $this->get('logger')->debug('UKMDipBundle: UsernamePasswordToken: '. $token);
 				        // For older versions of Symfony, use security.context here
                         if(\Symfony\Component\HttpKernel\Kernel::VERSION > 2.5) {
                             // Newer uses security.token_storage
