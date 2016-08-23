@@ -143,15 +143,15 @@ Hvordan komme i gang?
     ukm_dip.entry_point: ~
     ukm_dip.api_key: ~
     ukm_dip.api_secret: ~
-    ukm_dip.user_class: AppBundle\Entity\User
-    ukm_dip.token_salt: ~ 
+    ukm_dip.token_salt: ~
+    ukm_dip.user_class: AppBundle\Entity\User 
  ```
 
 9. Oppdater database-mappingen
    
    ```
    php bin/console doctrine:schema:update --force
-   ``
+   ```
 
 10. Kjør en `composer install`
 

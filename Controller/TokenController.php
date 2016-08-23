@@ -55,7 +55,8 @@ class TokenController extends Controller
     	// Send request to Delta with token-info
     	// $dipURL = 'http://delta.ukm.dev/web/app_dev.php/dip/token';
         #$location = 'ambassador';
-        $location = $this->container->getParameter('ukm_dip.location');
+        #$location = $this->container->getParameter('ukm_dip.location');
+        $location = $this->container->getParameter('ukm_dip.api_key');
         #$firewall_name = 'secure_area';
         $firewall_name = $this->container->getParameter('ukm_dip.firewall_area');
         #$entry_point = 'ukm_amb_join_address';
