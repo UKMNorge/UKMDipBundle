@@ -267,7 +267,7 @@ class TokenController extends Controller
             // Lagre brukeren lokalt
     		$em->persist($user);
     		$em->flush();
-            return new Response('Success (ReceiveAction)!');
+            return new Response('Success');
         }
         catch (Exception $e) {
             $errorMsg = 'UKMDipBundle: receiveAction - En feil har oppstått: '.$e->getMessage(). ' at line '.$e->getLine();
