@@ -168,7 +168,7 @@ class TokenController extends Controller
         $signer = $this->get('UKM.urlsigner');
         $params['sign'] = $signer->getSignedURL('POST', $params);
         #$curl->post(array('location' => $location, 'token' => $token->getToken()));
-        $this->get('logger')->debug('UKMDipBundle: POSTing token to Delta: '.var_export($params));
+        $this->get('logger')->debug('UKMDipBundle: POSTing token to Delta: '.var_export($params, true));
         $curl->post($params);
         $res = $curl->process($this->dipURL);
         // res should be a JSON-object.
