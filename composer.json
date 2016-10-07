@@ -10,9 +10,6 @@
 			"role": "Developer"
 		}
 	],
-	"require": {
-		"friendsofsymfony/user-bundle": "~2.0@dev || ~3.0"
-	},
 	"autoload": {
 		"psr-4": {
 			"UKMNorge\\UKMDipBundle\\": ""
