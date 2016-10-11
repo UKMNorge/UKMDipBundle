@@ -122,7 +122,13 @@ class TokenController extends Controller
                         $this->get('logger')->info('UKMDipBundle: Dispatching interactive_login event.');
                         $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
 
-                        // Redirect til en side bak firewall i stedet
+                        // Har vi en referer-side?
+                        $referer = $session->get('referer');
+                        if($referer != null) {
+                            $this->get('logger')->debug('UKMDipBundle: Referer: '.$referer);
+                            return $this->redirect($referer);
+                        }
+                        // Hvis ikke, redirect til en side bak firewall i stedet
                         return $this->redirect($this->generateUrl($entry_point));
                     }
                     else {
