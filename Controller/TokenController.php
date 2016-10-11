@@ -157,7 +157,14 @@ class TokenController extends Controller
             $session = new Session();
             $session->start();
         }
-
+ 
+        // Do we have a referer-page?
+        $request = Request::CreateFromGlobals();
+        $referer = $request->headers->get('referer'); 
+        if(null != $referer) {
+            $session->set('referer', $referer);
+        }
+        
         // Generate token entity
         $token = new Token($this->container->getParameter('ukm_dip.token_salt'));
         $this->get('logger')->debug('UKMDipBundle: Created new token for user ('.$token->getToken().').');
@@ -203,7 +210,6 @@ class TokenController extends Controller
         try {
             // Receives a JSON-object in a POST-request from Delta
             // This is all the user-data, plus a token
-
 
             $request = Request::CreateFromGlobals();
             $data = json_decode($request->request->get('json'));
