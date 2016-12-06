@@ -176,7 +176,7 @@ class TokenController extends Controller
         $em->flush();
         
         // Send token to Delta
-        $params['api_key'] = $this->getParameter('ukm_dip.api_key');
+        $params['api_key'] = $this->container->getParameter('ukm_dip.api_key');
         $params['token'] = $token->getToken();
         $signer = $this->get('UKM.urlsigner');
         $params['sign'] = $signer->getSignedURL('POST', $params);
@@ -202,7 +202,30 @@ class TokenController extends Controller
         // Redirect to Delta
         $this->get('logger')->debug('UKMDipBundle: Redirecting user to Delta.');
         $url = $this->deltaLoginURL.'?token='.$token->getToken().'&rdirurl='.$location;
+        $url = $this->addScope($url);
         return $this->redirect($url);
+    }
+
+    /**
+     * Legger til krav om scope til Delta.
+     * Hvis scope følger innloggingsforespørselen, vil Delta først kreve at informasjonen vi ber om er lagt inn av brukeren,
+     * og deretter sende den til oss på receive.
+     *
+     * @param $url - En fullverdig URL til delta-innloggingen.
+     * @return $url - En URL inkl. scope.
+     */
+    public function addScope( $url ) {
+        // Hvis vi vil be om mer informasjon fra Delta:
+        if( $this->container->hasParameter('ukm_dip.scope') ) {
+            if( strpos($url, '?') ) {
+                $url = $url.'&scope=';
+            }  
+            else {
+                $url = $url.'?scope=';
+            }
+            $url = $url . implode($this->container->getParameter('ukm_dip.scope'), ',');
+        }  
+        return $url;
     }
 
     public function receiveAction() {
