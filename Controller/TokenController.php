@@ -269,7 +269,7 @@ class TokenController extends Controller
             }
 
             // Find or update user
-            $userClass = $this->getParameter('ukm_dip.user_class');
+            $userClass = $this->container->getParameter('ukm_dip.user_class');
             $userRepo = $this->getDoctrine()->getRepository($userClass);
             #$userRepo = $this->getDoctrine()->getRepository('UKMDipBundle:UserClass');
             #$user = null;
