@@ -128,7 +128,7 @@ class TokenController extends Controller
                             $this->get('logger')->debug('UKMDipBundle: Referer: '.$referer);
                             return $this->redirect($referer);
                         }
-                        // Hvis ikke, redirect til en side bak firewall i stedet
+                        // Hvis ikke, redirect til et gitt entry point i stedet
                         return $this->redirect($this->generateUrl($entry_point));
                     }
                     else {
@@ -159,10 +159,16 @@ class TokenController extends Controller
         }
  
         // Do we have a referer-page?
-        $request = Request::CreateFromGlobals();
-        $referer = $request->headers->get('referer'); 
-        if(null != $referer) {
-            $session->set('referer', $referer);
+        if( $this->hasParameter('ukm_dip.use_referer') && 'false' == $this->getParameter('ukm_dip.use_referer') ) {
+            // Don't set referer
+        }
+        else {
+            $request = Request::CreateFromGlobals();
+            $referer = $request->headers->get('referer'); 
+            if(null != $referer) {
+                $session->set('referer', $referer);
+            }
+
         }
         
         // Generate token entity
