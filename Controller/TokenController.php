@@ -159,7 +159,7 @@ class TokenController extends Controller
         }
  
         // Do we have a referer-page?
-        if( $this->hasParameter('ukm_dip.use_referer') && 'false' == $this->getParameter('ukm_dip.use_referer') ) {
+        if( $this->container->hasParameter('ukm_dip.use_referer') && 'false' == $this->container->getParameter('ukm_dip.use_referer') ) {
             // Don't set referer
         }
         else {
