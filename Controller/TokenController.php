@@ -159,16 +159,21 @@ class TokenController extends Controller
         }
  
         // Do we have a referer-page?
+        if( $this->container->hasParameter('ukm_dip.use_referer') ) {
+            $this->get('logger')->debug('UKMDipBundle: The referer-setting is: '.$this->container->getParameter('ukm_dip.use_referer'));    
+        } 
+        // Do we have a referer-page?
         if( $this->container->hasParameter('ukm_dip.use_referer') && 'false' == $this->container->getParameter('ukm_dip.use_referer') ) {
             // Don't set referer
+            $this->get('logger')->info('UKMDipBundle: Ignoring referer.');
         }
         else {
             $request = Request::CreateFromGlobals();
             $referer = $request->headers->get('referer'); 
             if(null != $referer) {
+                $this->get('logger')->info('UKMDipBundle: Setting referer to '.$referer);
                 $session->set('referer', $referer);
             }
-
         }
         
         // Generate token entity
