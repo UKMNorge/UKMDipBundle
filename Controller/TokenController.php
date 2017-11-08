@@ -35,20 +35,35 @@ class TokenController extends Controller
 
     public function loginAction() 
     {   
-        if ( $this->container->hasParameter('UKM_HOSTNAME') && $this->container->getParameter('UKM_HOSTNAME') == 'ukm.dev') {
-            $this->dipURL = 'https://delta.ukm.dev/web/app_dev.php/dip/token';
-            $this->deltaLoginURL = 'https://delta.ukm.dev/web/app_dev.php/login';
-        } 
-        else {
-            $this->dipURL = 'https://delta.ukm.no/dip/token';
-            $this->deltaLoginURL = 'https://delta.ukm.no/login';
+        if( $this->container->hasParameter('ukm_dip.token_address') ) {
+            $this->dipURL = $this->container->getParameter('ukm_dip.token_address');
         }
+        else {
+            $this->get('logger')->info('UKMDipBundle: Not specifying ukm_dip.token_address in parameters is DEPRECATED. Please update your configuration.');
+            if ( $this->container->hasParameter('UKM_HOSTNAME') && $this->container->getParameter('UKM_HOSTNAME') == 'ukm.dev') {
+                $this->dipURL = 'http://delta.ukm.dev/web/app_dev.php/dip/token';
+            } 
+            else {
+                $this->dipURL = 'https://delta.ukm.no/dip/token';
+            }    
+        }
+        
+        if( $this->container->hasParameter('ukm_dip.delta_login_address') ) {
+            $this->dipURL = $this->container->getParameter('ukm_dip.delta_login_address');
+        }
+        else {
+            $this->get('logger')->info('UKMDipBundle: Not specifying ukm_dip.delta_login_address in parameters is DEPRECATED. Please update your configuration.');
+            if ( $this->container->hasParameter('UKM_HOSTNAME') && $this->container->getParameter('UKM_HOSTNAME') == 'ukm.dev') {
+                $this->deltaLoginURL = 'http://delta.ukm.dev/web/app_dev.php/login';
+            } 
+            else {
+                $this->deltaLoginURL = 'https://delta.ukm.no/login';
+            }    
+        }
+
 
         $this->get('logger')->debug('UKMDipBundle: dipURL = '.$this->dipURL);
         $this->get('logger')->debug('UKMDipBundle: deltaLoginURL = '.$this->deltaLoginURL);
-
-       /* $this->dipURL = 'https://delta.ukm.no/dip/token';
-        $this->deltaLoginURL = 'https://delta.ukm.no/login';*/
 
         require_once('UKM/curl.class.php');
         // Dette er entry-funksjonen til DIP-innlogging.
@@ -56,13 +71,8 @@ class TokenController extends Controller
         // og hvis ikke genererer vi en og sender brukeren videre til Delta.
 
         // Send request to Delta with token-info
-        // $dipURL = 'https://delta.ukm.dev/web/app_dev.php/dip/token';
-        #$location = 'ambassador';
-        #$location = $this->container->getParameter('ukm_dip.location');
         $location = $this->container->getParameter('ukm_dip.api_key');
-        #$firewall_name = 'secure_area';
         $firewall_name = $this->container->getParameter('ukm_dip.firewall_area');
-        #$entry_point = 'ukm_amb_join_address';
         $entry_point = $this->container->getParameter('ukm_dip.entry_point');
         $curl = new UKMCurl();
 
@@ -81,7 +91,6 @@ class TokenController extends Controller
                 $existingToken = $repo->findOneBy(array('token' => $token));
                 if ($existingToken) {
                     $this->get('logger')->debug('UKMDipBundle: The token is in database.');
-                    // Hvis token finnes
                     if ($existingToken->getAuth() == true) {   
                         $this->get('logger')->debug('UKMDipBundle: Token is Authorized, logging in user.');
 
@@ -110,12 +119,6 @@ class TokenController extends Controller
                         // Apparently, we also need to store the token in the session
                         $session->set('_security_'.$firewall_name, serialize($token));
                         $session->save();
-
-                        // $this->get('event_dispatcher')->dispatch( 
-                        //     AuthenticationEvents::AUTHENTICATION_SUCCESS, 
-                        //     new AuthenticationEvent($token)
-                        // );
-
                         
                         $request = Request::CreateFromGlobals();
                         $event = new InteractiveLoginEvent($request, $token);
@@ -191,7 +194,7 @@ class TokenController extends Controller
         $params['token'] = $token->getToken();
         $signer = $this->get('UKM.urlsigner');
         $params['sign'] = $signer->getSignedURL('POST', $params);
-        #$curl->post(array('location' => $location, 'token' => $token->getToken()));
+
         $this->get('logger')->debug('UKMDipBundle: POSTing token to Delta: '.var_export($params, true));
         $curl->post($params);
         $res = $curl->process($this->dipURL);
@@ -199,7 +202,6 @@ class TokenController extends Controller
         if(!is_object($res)) {
             $this->get('logger')->critical('UKMDipBundle: Delta returnerte ikke et objekt. Quitting.');
             throw new Exception('UKMDipBundle: Den felles innloggingsportalen til UKM er ikke tilgjengelig akkurat nå. Ta kontakt med UKM Support om problemet fortsetter.');
-            #throw new Exception('UKMDipBundle: Delta returnerte ikke et objekt.');
         }
         
         if($res->success) {
@@ -251,7 +253,6 @@ class TokenController extends Controller
 
             $this->get('logger')->debug('UKMDipBundle: Token '.$data->token. ' received.');
             $this->get('logger')->debug('UKMDipBundle: User has delta_id '.$data->delta_id . '.');
-            #$this->get('logger')->debug('UKMDipBundle: Data: '. var_export($data));
 
             $repo = $this->getDoctrine()->getRepository('UKMDipBundle:Token');
             $existingToken = $repo->findOneBy(array('token' => $data->token));
@@ -271,7 +272,6 @@ class TokenController extends Controller
             $em->persist($existingToken);
 
             $this->get('logger')->debug('UKMDipBundle: Token set as authenticated.');
-            #$em->flush(); // No need to flush more than once per request?
 
             if(!$this->validateData($data)) {
                 $msg = 'UKMDipBundle: Dataene som ble tatt i mot feilet validering.';
@@ -282,8 +282,7 @@ class TokenController extends Controller
             // Find or update user
             $userClass = $this->container->getParameter('ukm_dip.user_class');
             $userRepo = $this->getDoctrine()->getRepository($userClass);
-            #$userRepo = $this->getDoctrine()->getRepository('UKMDipBundle:UserClass');
-            #$user = null;
+            
             $user = $userRepo->findOneBy(array('deltaId' => $data->delta_id));
             if (!$user) {
                 // Hvis bruker ikke finnes.
@@ -293,8 +292,6 @@ class TokenController extends Controller
                 #$user = new $userClass();
                 $userManager = $this->get('fos_user.user_manager');
                 $user = $userManager->createUser();
-                #$user = new User();
-
             }
 
             $this->get('logger')->debug('UKMDipBundle: UserClass: '.get_class($user).'. Saving user-data: ' . var_export($data, true));
