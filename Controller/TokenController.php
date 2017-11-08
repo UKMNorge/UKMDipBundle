@@ -35,26 +35,26 @@ class TokenController extends Controller
 
     public function loginAction() 
     {   
-        if( $this->container->hasParameter('ukm_dip_token_address') ) {
-            $this->dipURL = $this->container->getParameter('ukm_dip_token_address');
+        if( $this->container->hasParameter('ukm_dip.token_address') ) {
+            $this->dipURL = $this->container->getParameter('ukm_dip.token_address');
         }
         else {
-            $this->get('logger')->info('UKMDipBundle: Not specifying ukm_dip_token_address in parameters is DEPRECATED. Please update your configuration.');
+            $this->get('logger')->info('UKMDipBundle: Not specifying ukm_dip.token_address in parameters is DEPRECATED. Please update your configuration.');
             if ( $this->container->hasParameter('UKM_HOSTNAME') && $this->container->getParameter('UKM_HOSTNAME') == 'ukm.dev') {
-                $this->dipURL = 'https://delta.ukm.dev/web/app_dev.php/dip/token';
+                $this->dipURL = 'http://delta.ukm.dev/web/app_dev.php/dip/token';
             } 
             else {
                 $this->dipURL = 'https://delta.ukm.no/dip/token';
             }    
         }
         
-        if( $this->container->hasParameter('ukm_dip_delta_login_address') ) {
-            $this->dipURL = $this->container->getParameter('ukm_dip_delta_login_address');
+        if( $this->container->hasParameter('ukm_dip.delta_login_address') ) {
+            $this->dipURL = $this->container->getParameter('ukm_dip.delta_login_address');
         }
         else {
-            $this->get('logger')->info('UKMDipBundle: Not specifying ukm_dip_delta_login_address in parameters is DEPRECATED. Please update your configuration.');
+            $this->get('logger')->info('UKMDipBundle: Not specifying ukm_dip.delta_login_address in parameters is DEPRECATED. Please update your configuration.');
             if ( $this->container->hasParameter('UKM_HOSTNAME') && $this->container->getParameter('UKM_HOSTNAME') == 'ukm.dev') {
-                $this->deltaLoginURL = 'https://delta.ukm.dev/web/app_dev.php/login';
+                $this->deltaLoginURL = 'http://delta.ukm.dev/web/app_dev.php/login';
             } 
             else {
                 $this->deltaLoginURL = 'https://delta.ukm.no/login';
