@@ -41,7 +41,7 @@ class TokenController extends Controller
         else {
             $this->get('logger')->info('UKMDipBundle: Not specifying ukm_dip.token_address in parameters is DEPRECATED. Please update your configuration.');
             if ( $this->container->hasParameter('UKM_HOSTNAME') && $this->container->getParameter('UKM_HOSTNAME') == 'ukm.dev') {
-                $this->dipURL = 'http://delta.ukm.dev/web/app_dev.php/dip/token';
+                $this->dipURL = 'http://delta.ukm.dev/app_dev.php/dip/token';
             } 
             else {
                 $this->dipURL = 'https://delta.ukm.no/dip/token';
@@ -54,7 +54,7 @@ class TokenController extends Controller
         else {
             $this->get('logger')->info('UKMDipBundle: Not specifying ukm_dip.delta_login_address in parameters is DEPRECATED. Please update your configuration.');
             if ( $this->container->hasParameter('UKM_HOSTNAME') && $this->container->getParameter('UKM_HOSTNAME') == 'ukm.dev') {
-                $this->deltaLoginURL = 'http://delta.ukm.dev/web/app_dev.php/login';
+                $this->deltaLoginURL = 'http://delta.ukm.dev/app_dev.php/login';
             } 
             else {
                 $this->deltaLoginURL = 'https://delta.ukm.no/login';
