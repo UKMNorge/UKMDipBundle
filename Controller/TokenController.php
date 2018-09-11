@@ -49,7 +49,7 @@ class TokenController extends Controller
         }
         
         if( $this->container->hasParameter('ukm_dip.delta_login_address') ) {
-            $this->dipURL = $this->container->getParameter('ukm_dip.delta_login_address');
+            $this->deltaLoginURL = $this->container->getParameter('ukm_dip.delta_login_address');
         }
         else {
             $this->get('logger')->info('UKMDipBundle: Not specifying ukm_dip.delta_login_address in parameters is DEPRECATED. Please update your configuration.');
